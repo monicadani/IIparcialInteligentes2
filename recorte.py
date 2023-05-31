@@ -25,9 +25,10 @@ def rotar_imagen(image, angle):
     return rotated
 
 
-def procesar_imagen(image_path):
+#def procesar_imagen(image_path):
+def procesar_imagen(img):
     # Cargar la imagen
-    img = cv2.imread(image_path)
+    #img = cv2.imread(image_path)
 
     # Convertir la imagen a escala de grises
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -56,9 +57,20 @@ def procesar_imagen(image_path):
             resized = cv2.resize(rotated_gray, (128, 128))
 
             # Guardar la imagen redimensionada para el contorno actual
-            cv2.imwrite(f"contorno_{i}_rotated_{angle}.jpg", resized)
+            cv2.imwrite(f"contorno_{12}_rotated_{angle}.jpg", resized)
 
 
-procesar_imagen("6.0.jpg")
+#procesar_imagen("models/dataset/images/6/6.0.jpg")
+#procesar_imagen("models/dataset/images/7/7.0.jpg")
+#procesar_imagen("models/dataset/images/8/8.0.jpg")
+#procesar_imagen("models/dataset/images/9/9.0.jpg")
+#procesar_imagen("models/dataset/images/10/10.0.jpg")
+#procesar_imagen("models/dataset/images/11/11.0.jpg")
+#procesar_imagen("models/dataset/images/8/8.2.jpg")
+#procesar_imagen("models/dataset/images/12/12.5.jpg")
+
+
+
+
 
 
