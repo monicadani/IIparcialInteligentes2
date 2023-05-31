@@ -1,11 +1,13 @@
-from tensorflow.python.keras.models import load_model
+from keras.models import load_model  # TensorFlow is required for Keras to work
+import cv2  # Install opencv-python
 import numpy as np
-import cv2
 
+np.set_printoptions(suppress=True)
 
 class Prediccion():
     def __init__(self, ruta):
-        self.modelo = load_model(ruta)
+        self.model = load_model(ruta, compile=False)
+
 
     def predecir(self, imagen):
         # imagen = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)

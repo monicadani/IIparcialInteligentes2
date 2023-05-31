@@ -1,0 +1,7 @@
+0 Espada6
+1 Espada7
+2 Espada8
+3 Espada9
+4 Espada10
+5 Espada11
+6 Espada12
