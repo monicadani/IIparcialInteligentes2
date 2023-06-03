@@ -28,7 +28,7 @@ def cargarDatos(fase, numeroCategorias, limite, width, height):
 
     for categoria in range(6, numeroCategorias + 6):
         for idImagen in range(1, limite[categoria - 6] + 1):
-            ruta = "dataset/train/" + str(categoria) + "/" + str(categoria) + ".jpg"
+            ruta = "../dataset/train/" + str(categoria) + "/" + str(categoria) + ".jpg"
             imagen = cv2.imread(ruta)
             imagen = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
             imagen = cv2.resize(imagen, (width, height))
@@ -62,7 +62,7 @@ cantidad_datos_pruebas = [16, 16, 16, 16, 16, 16,16]
 
 # Carga de los datos
 imagenes, probabilidades = cargarDatos(
-    "dataset/train/", num_clases, cantidad_datos_entenamiento, width, height)
+    "../dataset/train/", num_clases, cantidad_datos_entenamiento, width, height)
 print(imagenes)
 
 model = Sequential()
@@ -96,7 +96,7 @@ model.compile(optimizer="adam",
 model.fit(x=imagenes, y=probabilidades, epochs=30, batch_size=25)
 # Pruebas
 imagenes_prueba, probabilidades_prueba = cargarDatos(
-    "dataset/test/", num_clases, cantidad_datos_pruebas, width, height)
+    "../dataset/test/", num_clases, cantidad_datos_pruebas, width, height)
 resultados = model.evaluate(x=imagenes_prueba, y=probabilidades_prueba)
 print(model.metrics_names)
 print(resultados)
