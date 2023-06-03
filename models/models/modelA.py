@@ -5,7 +5,7 @@
 """
 
 import base64
-
+import time
 import tensorflow as tf
 import keras
 import numpy as np
@@ -27,9 +27,9 @@ def cargarDatos(rutaOrigen, numeroCategorias, limite, width, height):
     imagenesCargadas = []
     valorEsperado = []
 
-    for categoria in range(0, numeroCategorias):
-        for idImagen in range(0, limite[categoria]):
-            ruta = rutaOrigen + str(categoria) + "/" + str(categoria) + "_" + str(idImagen) + ".jpg"
+    for categoria in range(6, numeroCategorias + 6):
+        for idImagen in range(1, limite[categoria - 6] + 1):
+            ruta = rutaOrigen + str(categoria) + "/" + str(categoria) + ".jpg"
             imagen = cv2.imread(ruta)
             imagen = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
             imagen = cv2.resize(imagen, (width, height))
@@ -37,7 +37,7 @@ def cargarDatos(rutaOrigen, numeroCategorias, limite, width, height):
             imagen = imagen / 255
             imagenesCargadas.append(imagen)
             probabilidades = np.zeros(numeroCategorias)
-            probabilidades[categoria] = 1
+            probabilidades[categoria - 6] = 1
             valorEsperado.append(probabilidades)
     imagenes_entrenamiento = np.array(imagenesCargadas)
     valores_esperados = np.array(valorEsperado)
@@ -57,9 +57,9 @@ num_channels = 1
 img_shape = (width, height, num_channels)
 
 # Cant elementos a clasifica
-num_clases = 10
-cantidad_datos_entenamiento = [64, 64, 64, 64, 56, 56, 56, 56, 56, 56]
-cantidad_datos_pruebas = [16, 16, 16, 16, 14, 14, 14, 14, 14, 14]
+num_clases = 7
+cantidad_datos_entenamiento = [50, 50, 50, 50, 50, 50, 50]
+cantidad_datos_pruebas = [16, 16, 16, 16, 16, 16,16]
 
 ##Carga de los datos
 imagenes, probabilidades = cargarDatos("dataset/train/", num_clases, cantidad_datos_entenamiento, width, height)
@@ -90,7 +90,7 @@ model.add(Dense(num_clases, activation="softmax"))
 # Traducir de keras a tensorflow
 model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
 
-model.fit(x=imagenes, y=probabilidades, epochs=30, batch_size=60)
+model.fit(x=imagenes, y=probabilidades, epochs=40, batch_size=14)
 # Pruebas
 imagenes_prueba, probabilidades_prueba = cargarDatos("dataset/test/", num_clases, cantidad_datos_pruebas, width, height)
 resultados = model.evaluate(x=imagenes_prueba, y=probabilidades_prueba)
@@ -108,15 +108,18 @@ model.summary()
 metricResult = model.evaluate(x=imagenes, y=probabilidades)
 print("----METRIC RESULT----")
 print(metricResult)
-
-scnn_pred = model.predict(imagenes_prueba, batch_size=60, verbose=1)
+start_time = time.time()
+scnn_pred = model.predict(imagenes_prueba, batch_size=14, verbose=1)
+end_time = time.time()
 scnn_predicted = np.argmax(scnn_pred, axis=1)
+response_time = end_time - start_time
+print("Tiempo de respuesta:", response_time, "segundos")
 
 # Creamos la matriz de confusión
 scnn_cm = confusion_matrix(np.argmax(probabilidades_prueba, axis=1), scnn_predicted)
 
 # Visualiamos la matriz de confusión
-scnn_df_cm = pd.DataFrame(scnn_cm, range(10), range(10))
+scnn_df_cm = pd.DataFrame(scnn_cm, range(7), range(7))
 plt.figure(figsize=(20, 14))
 sn.set(font_scale=1.4)  # for label size
 sn.heatmap(scnn_df_cm, annot=True, annot_kws={"size": 12})  # font size

@@ -7,7 +7,7 @@ from Cut import Cut
 
 nameWindow = "Calculadora"
 prediccion = Prediccion('models/models/keras_modelPPNuevo.h5')
-prueba=test('models/models/keras_modelPPNuevo.h5')
+prueba=test('models/models/model_a.h5')
 
 
 def nothing(x):
