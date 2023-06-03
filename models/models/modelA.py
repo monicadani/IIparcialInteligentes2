@@ -62,7 +62,7 @@ cantidad_datos_entenamiento = [50, 50, 50, 50, 50, 50, 50]
 cantidad_datos_pruebas = [16, 16, 16, 16, 16, 16,16]
 
 ##Carga de los datos
-imagenes, probabilidades = cargarDatos("dataset/train/", num_clases, cantidad_datos_entenamiento, width, height)
+imagenes, probabilidades = cargarDatos("../dataset/train/", num_clases, cantidad_datos_entenamiento, width, height)
 print(imagenes)
 
 model = Sequential()
@@ -92,7 +92,7 @@ model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accur
 
 model.fit(x=imagenes, y=probabilidades, epochs=40, batch_size=14)
 # Pruebas
-imagenes_prueba, probabilidades_prueba = cargarDatos("dataset/test/", num_clases, cantidad_datos_pruebas, width, height)
+imagenes_prueba, probabilidades_prueba = cargarDatos("../dataset/test/", num_clases, cantidad_datos_pruebas, width, height)
 resultados = model.evaluate(x=imagenes_prueba, y=probabilidades_prueba)
 print("METRIC NAMES", model.metrics_names)
 print("RESULTADOS", resultados)
