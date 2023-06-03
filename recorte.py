@@ -1,76 +1,28 @@
 import cv2
 import numpy as np
 
-def recortar_contorno(image, contour):
+# Cargar la imagen
+img = cv2.imread("models/dataset/images/7/contorno_6_rotated_-130.jpg")
+# Convertir la imagen a escala de grises
+gray: object = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+# Aplicar un umbral para obtener una imagen binaria
+_, threshold = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+
+# Encontrar contornos en la imagen binaria
+contours, _ = cv2.findContours(threshold, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+# Iterar sobre cada contorno y crear una imagen para cada uno
+for i, contour in enumerate(contours):
     # Crear una imagen en blanco del mismo tamaño que la imagen original
-    contour_image = np.zeros_like(image)
+    contour_image = np.zeros_like(img)
 
     # Dibujar el contorno en la imagen en blanco
     cv2.drawContours(contour_image, [contour], -1, (255, 255, 255), cv2.FILLED)
 
     # Recortar la región dentro del contorno en la imagen original
     x, y, w, h = cv2.boundingRect(contour)
-    cropped = image[y:y+h, x:x+w]
+    cropped = img[y:y+h, x:x+w]
 
-    return cropped
-
-
-def rotar_imagen(image, angle):
-    # Obtener la matriz de rotación
-    M = cv2.getRotationMatrix2D((image.shape[1]/2, image.shape[0]/2), angle, 1.0)
-
-    # Aplicar la rotación a la imagen
-    rotated = cv2.warpAffine(image, M, (image.shape[1], image.shape[0]))
-
-    return rotated
-
-
-#def procesar_imagen(image_path):
-def procesar_imagen(img):
-    # Cargar la imagen
-    #img = cv2.imread(image_path)
-
-    # Convertir la imagen a escala de grises
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-    # Aplicar un umbral para obtener una imagen binaria
-    _, threshold = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
-
-    # Encontrar contornos en la imagen binaria
-    contours, _ = cv2.findContours(threshold, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-    # Iterar sobre cada contorno y crear una imagen para cada uno
-    for i, contour in enumerate(contours):
-        # Recortar el contorno de la imagen
-        cropped = recortar_contorno(img, contour)
-
-        # Rotar la imagen recortada en diferentes ángulos
-        for angle in [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300, 310, 320, 330, 340, 350, 360, -10, -20, -30, -40, -50, -60, -70, -80, -90, -100, -110, -120, -130]:
-
-            # Rotar la imagen recortada
-            rotated = rotar_imagen(cropped, angle)
-
-            # Convertir la imagen rotada a escala de grises
-            rotated_gray = cv2.cvtColor(rotated, cv2.COLOR_BGR2GRAY)
-
-            # Redimensionar la imagen rotada a 128x128 píxeles
-            resized = cv2.resize(rotated_gray, (128, 128))
-
-            # Guardar la imagen redimensionada para el contorno actual
-            cv2.imwrite(f"contorno_{12}_rotated_{angle}.jpg", resized)
-
-
-#procesar_imagen("models/dataset/images/6/6.0.jpg")
-#procesar_imagen("models/dataset/images/7/7.0.jpg")
-#procesar_imagen("models/dataset/images/8/8.0.jpg")
-#procesar_imagen("models/dataset/images/9/9.0.jpg")
-#procesar_imagen("models/dataset/images/10/10.0.jpg")
-#procesar_imagen("models/dataset/images/11/11.0.jpg")
-#procesar_imagen("models/dataset/images/8/8.2.jpg")
-#procesar_imagen("models/dataset/images/12/12.5.jpg")
-
-
-
-
-
-
+    # Guardar la imagen recortada para el contorno actual
+    cv2.imwrite(f"contorno_{i}.jpg", cropped)
